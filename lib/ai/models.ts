@@ -1,20 +1,13 @@
-export const DEFAULT_CHAT_MODEL: string = 'chat-model';
+// Default provider when user first connects
+export const DEFAULT_CHAT_PROVIDER: string = 'openai';
+
+// Default model (in provider/model format)
+export const DEFAULT_CHAT_MODEL: string = 'openai/gpt-4o';
 
 export interface ChatModel {
   id: string;
   name: string;
-  description: string;
 }
 
-export const chatModels: Array<ChatModel> = [
-  {
-    id: 'chat-model',
-    name: 'Chat model',
-    description: 'Primary model for all-purpose chat',
-  },
-  {
-    id: 'chat-model-reasoning',
-    name: 'Reasoning model',
-    description: 'Uses advanced reasoning',
-  },
-];
+// Models are now fetched dynamically from /api/byorouter/models
+// based on the user's connected providers
