@@ -8,20 +8,32 @@ import {
   updateChatVisiblityById,
 } from '@/lib/db/queries';
 import type { VisibilityType } from '@/components/visibility-selector';
-import { myProvider } from '@/lib/ai/providers';
+import { getModel } from '@/lib/byorouter/model';
+import type { Session } from 'next-auth';
 
 export async function saveChatModelAsCookie(model: string) {
   const cookieStore = await cookies();
   cookieStore.set('chat-model', model);
 }
 
+export async function saveProviderAsCookie(provider: string) {
+  const cookieStore = await cookies();
+  cookieStore.set('chat-provider', provider);
+}
+
 export async function generateTitleFromUserMessage({
   message,
+  session,
+  modelId,
 }: {
   message: UIMessage;
+  session: Session;
+  modelId: string;
 }) {
+  const model = await getModel(session, modelId);
+
   const { text: title } = await generateText({
-    model: myProvider.languageModel('title-model'),
+    model,
     system: `\n
     - you will generate a short title based on the first message a user begins a conversation with
     - ensure it is not more than 80 characters long
