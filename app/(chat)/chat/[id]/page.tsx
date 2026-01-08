@@ -3,11 +3,13 @@ import { notFound, redirect } from 'next/navigation';
 
 import { auth } from '@/app/(auth)/auth';
 import { Chat } from '@/components/chat';
-import { getChatById, getMessagesByChatId } from '@/lib/db/queries';
+import { getChatById, getMessagesByChatId, getUserConnectionId } from '@/lib/db/queries';
 import { DataStreamHandler } from '@/components/data-stream-handler';
-import { DEFAULT_CHAT_MODEL } from '@/lib/ai/models';
+import { DEFAULT_CHAT_MODEL, DEFAULT_CHAT_PROVIDER } from '@/lib/ai/models';
+import { isTestEnvironment } from '@/lib/constants';
 import type { DBMessage } from '@/lib/db/schema';
 import type { Attachment, UIMessage } from 'ai';
+import { BYORouter } from '@byorouter/node';
 
 export default async function Page(props: { params: Promise<{ id: string }> }) {
   const params = await props.params;
@@ -34,6 +36,12 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
     }
   }
 
+  // In test environment, skip connection check (uses mock provider)
+  const connectionId = isTestEnvironment
+    ? null
+    : await getUserConnectionId(session.user.id);
+  const hasConnection = isTestEnvironment ? true : !!connectionId;
+
   const messagesFromDb = await getMessagesByChatId({
     id,
   });
@@ -53,22 +61,24 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
 
   const cookieStore = await cookies();
   const chatModelFromCookie = cookieStore.get('chat-model');
+  const providerIdFromCookie = cookieStore.get('chat-provider');
 
-  if (!chatModelFromCookie) {
-    return (
-      <>
-        <Chat
-          id={chat.id}
-          initialMessages={convertToUIMessages(messagesFromDb)}
-          initialChatModel={DEFAULT_CHAT_MODEL}
-          initialVisibilityType={chat.visibility}
-          isReadonly={session?.user?.id !== chat.userId}
-          session={session}
-          autoResume={true}
-        />
-        <DataStreamHandler id={id} />
-      </>
-    );
+  const initialProvider = providerIdFromCookie?.value ?? DEFAULT_CHAT_PROVIDER;
+  const initialModel = chatModelFromCookie?.value ?? DEFAULT_CHAT_MODEL;
+
+  // Fetch provider display name from API
+  let initialProviderDisplayName = initialProvider;
+  if (connectionId && !isTestEnvironment) {
+    try {
+      const client = new BYORouter({ apiKey: process.env.BYOROUTER_API_KEY! });
+      const providers = await client.getProviders(connectionId);
+      const provider = providers.find((p) => p.provider === initialProvider);
+      if (provider) {
+        initialProviderDisplayName = provider.displayName;
+      }
+    } catch {
+      // Fallback to raw provider ID on error
+    }
   }
 
   return (
@@ -76,11 +86,14 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
       <Chat
         id={chat.id}
         initialMessages={convertToUIMessages(messagesFromDb)}
-        initialChatModel={chatModelFromCookie.value}
+        initialChatModel={initialModel}
+        initialChatProvider={initialProvider}
+        initialProviderDisplayName={initialProviderDisplayName}
         initialVisibilityType={chat.visibility}
         isReadonly={session?.user?.id !== chat.userId}
         session={session}
         autoResume={true}
+        hasConnection={hasConnection}
       />
       <DataStreamHandler id={id} />
     </>
