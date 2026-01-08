@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useWindowSize } from 'usehooks-ts';
 
 import { ModelSelector } from '@/components/model-selector';
+import { ProviderSelector } from '@/components/provider-selector';
 import { SidebarToggle } from '@/components/sidebar-toggle';
 import { Button } from '@/components/ui/button';
 import { PlusIcon, VercelIcon } from './icons';
@@ -17,15 +18,19 @@ import type { Session } from 'next-auth';
 function PureChatHeader({
   chatId,
   selectedModelId,
+  selectedProviderId,
+  selectedProviderDisplayName,
   selectedVisibilityType,
   isReadonly,
-  session,
+  hasConnection,
 }: {
   chatId: string;
   selectedModelId: string;
+  selectedProviderId: string;
+  selectedProviderDisplayName: string;
   selectedVisibilityType: VisibilityType;
   isReadonly: boolean;
-  session: Session;
+  hasConnection: boolean;
 }) {
   const router = useRouter();
   const { open } = useSidebar();
@@ -55,20 +60,26 @@ function PureChatHeader({
         </Tooltip>
       )}
 
-      {!isReadonly && (
-        <ModelSelector
-          session={session}
-          selectedModelId={selectedModelId}
+      {!isReadonly && hasConnection && (
+        <ProviderSelector
+          selectedProviderId={selectedProviderId}
+          initialDisplayName={selectedProviderDisplayName}
           className="order-1 md:order-2"
         />
       )}
 
-      {!isReadonly && (
-        <VisibilitySelector
-          chatId={chatId}
-          selectedVisibilityType={selectedVisibilityType}
-          className="order-1 md:order-3"
+      {!isReadonly && hasConnection && (
+        <ModelSelector
+          selectedModelId={selectedModelId}
+          selectedProvider={selectedProviderId}
+          className="order-2 md:order-3"
         />
+      )}
+
+      {!isReadonly && !hasConnection && (
+        <Button variant="outline" className="order-1 md:order-2 py-1.5 px-2 h-fit" asChild>
+          <a href="/api/byorouter/connect">Connect AI Provider</a>
+        </Button>
       )}
 
       <Button
@@ -83,10 +94,23 @@ function PureChatHeader({
           Deploy with Vercel
         </Link>
       </Button>
+
+      {!isReadonly && (
+        <VisibilitySelector
+          chatId={chatId}
+          selectedVisibilityType={selectedVisibilityType}
+          className="order-5"
+        />
+      )}
     </header>
   );
 }
 
 export const ChatHeader = memo(PureChatHeader, (prevProps, nextProps) => {
-  return prevProps.selectedModelId === nextProps.selectedModelId;
+  return (
+    prevProps.selectedModelId === nextProps.selectedModelId &&
+    prevProps.selectedProviderId === nextProps.selectedProviderId &&
+    prevProps.selectedProviderDisplayName === nextProps.selectedProviderDisplayName &&
+    prevProps.hasConnection === nextProps.hasConnection
+  );
 });
