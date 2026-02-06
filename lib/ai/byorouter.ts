@@ -1,4 +1,4 @@
-import { createBYORouter } from '@byorouter/ai-sdk';
+import { createBYORouter } from "@byorouter/ai-sdk";
 
 export function getByorouterProvider(connectionId: string) {
   return createBYORouter({

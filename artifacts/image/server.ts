@@ -1,19 +1,19 @@
-import { myProvider } from '@/lib/ai/providers';
-import { createDocumentHandler } from '@/lib/artifacts/server';
-import { experimental_generateImage } from 'ai';
-import { isTestEnvironment } from '@/lib/constants';
+import { myProvider } from "@/lib/ai/providers";
+import { createDocumentHandler } from "@/lib/artifacts/server";
+import { experimental_generateImage } from "ai";
+import { isTestEnvironment } from "@/lib/constants";
 
-export const imageDocumentHandler = createDocumentHandler<'image'>({
-  kind: 'image',
+export const imageDocumentHandler = createDocumentHandler<"image">({
+  kind: "image",
   onCreateDocument: async ({ title, dataStream }) => {
     if (!isTestEnvironment) {
-      throw new Error('Image generation is not supported with BYORouter yet');
+      throw new Error("Image generation is not supported with BYORouter yet");
     }
 
-    let draftContent = '';
+    let draftContent = "";
 
     const { image } = await experimental_generateImage({
-      model: myProvider!.imageModel('small-model'),
+      model: myProvider!.imageModel("small-model"),
       prompt: title,
       n: 1,
     });
@@ -21,7 +21,7 @@ export const imageDocumentHandler = createDocumentHandler<'image'>({
     draftContent = image.base64;
 
     dataStream.writeData({
-      type: 'image-delta',
+      type: "image-delta",
       content: image.base64,
     });
 
@@ -29,13 +29,13 @@ export const imageDocumentHandler = createDocumentHandler<'image'>({
   },
   onUpdateDocument: async ({ description, dataStream }) => {
     if (!isTestEnvironment) {
-      throw new Error('Image generation is not supported with BYORouter yet');
+      throw new Error("Image generation is not supported with BYORouter yet");
     }
 
-    let draftContent = '';
+    let draftContent = "";
 
     const { image } = await experimental_generateImage({
-      model: myProvider!.imageModel('small-model'),
+      model: myProvider!.imageModel("small-model"),
       prompt: description,
       n: 1,
     });
@@ -43,7 +43,7 @@ export const imageDocumentHandler = createDocumentHandler<'image'>({
     draftContent = image.base64;
 
     dataStream.writeData({
-      type: 'image-delta',
+      type: "image-delta",
       content: image.base64,
     });
 

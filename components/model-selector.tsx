@@ -1,18 +1,18 @@
-'use client';
+"use client";
 
-import { startTransition, useMemo, useOptimistic, useState } from 'react';
-import { useModels } from '@byorouter/react';
+import { startTransition, useMemo, useOptimistic, useState } from "react";
+import { useModels } from "@byorouter/react";
 
-import { saveChatModelAsCookie } from '@/app/(chat)/actions';
-import { Button } from '@/components/ui/button';
+import { saveChatModelAsCookie } from "@/app/(chat)/actions";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { cn } from '@/lib/utils';
-import { CheckCircleFillIcon, ChevronDownIcon } from './icons';
+} from "@/components/ui/dropdown-menu";
+import { cn } from "@/lib/utils";
+import { CheckCircleFillIcon, ChevronDownIcon } from "./icons";
 
 export function ModelSelector({
   selectedModelId,
@@ -35,14 +35,15 @@ export function ModelSelector({
   );
 
   // If selected model is not in available models, show first available or fallback
-  const displayName = selectedModel?.name ?? availableModels[0]?.name ?? 'Select Model';
+  const displayName =
+    selectedModel?.name ?? availableModels[0]?.name ?? "Select Model";
 
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger
         asChild
         className={cn(
-          'w-fit data-[state=open]:bg-accent data-[state=open]:text-accent-foreground',
+          "w-fit data-[state=open]:bg-accent data-[state=open]:text-accent-foreground",
           className,
         )}
       >

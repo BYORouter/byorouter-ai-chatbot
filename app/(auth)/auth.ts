@@ -1,19 +1,22 @@
-import { compare } from 'bcrypt-ts';
-import NextAuth, { type DefaultSession } from 'next-auth';
-import Credentials from 'next-auth/providers/credentials';
-import { createGuestUser, getUser } from '@/lib/db/queries';
-import { authConfig } from './auth.config';
-import { DUMMY_PASSWORD } from '@/lib/constants';
-import type { DefaultJWT } from 'next-auth/jwt';
+import { compare, genSaltSync, hashSync } from "bcrypt-ts";
+import { generateId } from "ai";
+import NextAuth, { type DefaultSession } from "next-auth";
+import Credentials from "next-auth/providers/credentials";
+import { createGuestUser, getUser } from "@/lib/db/queries";
+import { authConfig } from "./auth.config";
+import type { DefaultJWT } from "next-auth/jwt";
 
-export type UserType = 'guest' | 'regular';
+// Generate dummy password here to avoid pulling bcrypt into Edge middleware via constants.ts
+const DUMMY_PASSWORD = hashSync(generateId(12), genSaltSync(10));
 
-declare module 'next-auth' {
+export type UserType = "guest" | "regular";
+
+declare module "next-auth" {
   interface Session extends DefaultSession {
     user: {
       id: string;
       type: UserType;
-    } & DefaultSession['user'];
+    } & DefaultSession["user"];
   }
 
   interface User {
@@ -23,7 +26,7 @@ declare module 'next-auth' {
   }
 }
 
-declare module 'next-auth/jwt' {
+declare module "next-auth/jwt" {
   interface JWT extends DefaultJWT {
     id: string;
     type: UserType;
@@ -59,15 +62,15 @@ export const {
 
         if (!passwordsMatch) return null;
 
-        return { ...user, type: 'regular' };
+        return { ...user, type: "regular" };
       },
     }),
     Credentials({
-      id: 'guest',
+      id: "guest",
       credentials: {},
       async authorize() {
         const [guestUser] = await createGuestUser();
-        return { ...guestUser, type: 'guest' };
+        return { ...guestUser, type: "guest" };
       },
     }),
   ],
