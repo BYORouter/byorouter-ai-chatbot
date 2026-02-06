@@ -1,20 +1,20 @@
-import { cookies } from 'next/headers';
+import { cookies } from "next/headers";
 
-import { Chat } from '@/components/chat';
-import { DEFAULT_CHAT_MODEL, DEFAULT_CHAT_PROVIDER } from '@/lib/ai/models';
-import { generateUUID } from '@/lib/utils';
-import { DataStreamHandler } from '@/components/data-stream-handler';
-import { auth } from '../(auth)/auth';
-import { redirect } from 'next/navigation';
-import { getUserConnectionId } from '@/lib/db/queries';
-import { isTestEnvironment } from '@/lib/constants';
-import { BYORouter } from '@byorouter/node';
+import { Chat } from "@/components/chat";
+import { DEFAULT_CHAT_MODEL, DEFAULT_CHAT_PROVIDER } from "@/lib/ai/models";
+import { generateUUID } from "@/lib/utils";
+import { DataStreamHandler } from "@/components/data-stream-handler";
+import { auth } from "../(auth)/auth";
+import { redirect } from "next/navigation";
+import { getUserConnectionId } from "@/lib/db/queries";
+import { isTestEnvironment } from "@/lib/constants";
+import { BYORouter } from "@byorouter/node";
 
 export default async function Page() {
   const session = await auth();
 
   if (!session) {
-    redirect('/api/auth/guest');
+    redirect("/api/auth/guest");
   }
 
   const id = generateUUID();
@@ -26,8 +26,8 @@ export default async function Page() {
   const hasConnection = isTestEnvironment ? true : !!connectionId;
 
   const cookieStore = await cookies();
-  const modelIdFromCookie = cookieStore.get('chat-model');
-  const providerIdFromCookie = cookieStore.get('chat-provider');
+  const modelIdFromCookie = cookieStore.get("chat-model");
+  const providerIdFromCookie = cookieStore.get("chat-provider");
 
   const initialProvider = providerIdFromCookie?.value ?? DEFAULT_CHAT_PROVIDER;
   const initialModel = modelIdFromCookie?.value ?? DEFAULT_CHAT_MODEL;

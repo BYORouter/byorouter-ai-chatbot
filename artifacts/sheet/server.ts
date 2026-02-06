@@ -1,13 +1,13 @@
-import { z } from 'zod';
-import { streamObject } from 'ai';
-import { sheetPrompt, updateDocumentPrompt } from '@/lib/ai/prompts';
-import { createDocumentHandler } from '@/lib/artifacts/server';
-import { getModel } from '@/lib/byorouter/model';
+import { z } from "zod";
+import { streamObject } from "ai";
+import { sheetPrompt, updateDocumentPrompt } from "@/lib/ai/prompts";
+import { createDocumentHandler } from "@/lib/artifacts/server";
+import { getModel } from "@/lib/byorouter/model";
 
-export const sheetDocumentHandler = createDocumentHandler<'sheet'>({
-  kind: 'sheet',
+export const sheetDocumentHandler = createDocumentHandler<"sheet">({
+  kind: "sheet",
   onCreateDocument: async ({ title, dataStream, session, modelId }) => {
-    let draftContent = '';
+    let draftContent = "";
 
     const model = await getModel(session, modelId);
 
@@ -16,20 +16,20 @@ export const sheetDocumentHandler = createDocumentHandler<'sheet'>({
       system: sheetPrompt,
       prompt: title,
       schema: z.object({
-        csv: z.string().describe('CSV data'),
+        csv: z.string().describe("CSV data"),
       }),
     });
 
     for await (const delta of fullStream) {
       const { type } = delta;
 
-      if (type === 'object') {
+      if (type === "object") {
         const { object } = delta;
         const { csv } = object;
 
         if (csv) {
           dataStream.writeData({
-            type: 'sheet-delta',
+            type: "sheet-delta",
             content: csv,
           });
 
@@ -39,20 +39,26 @@ export const sheetDocumentHandler = createDocumentHandler<'sheet'>({
     }
 
     dataStream.writeData({
-      type: 'sheet-delta',
+      type: "sheet-delta",
       content: draftContent,
     });
 
     return draftContent;
   },
-  onUpdateDocument: async ({ document, description, dataStream, session, modelId }) => {
-    let draftContent = '';
+  onUpdateDocument: async ({
+    document,
+    description,
+    dataStream,
+    session,
+    modelId,
+  }) => {
+    let draftContent = "";
 
     const model = await getModel(session, modelId);
 
     const { fullStream } = streamObject({
       model,
-      system: updateDocumentPrompt(document.content, 'sheet'),
+      system: updateDocumentPrompt(document.content, "sheet"),
       prompt: description,
       schema: z.object({
         csv: z.string(),
@@ -62,13 +68,13 @@ export const sheetDocumentHandler = createDocumentHandler<'sheet'>({
     for await (const delta of fullStream) {
       const { type } = delta;
 
-      if (type === 'object') {
+      if (type === "object") {
         const { object } = delta;
         const { csv } = object;
 
         if (csv) {
           dataStream.writeData({
-            type: 'sheet-delta',
+            type: "sheet-delta",
             content: csv,
           });
 

@@ -1,24 +1,24 @@
-'use server';
+"use server";
 
-import { generateText, type UIMessage } from 'ai';
-import { cookies } from 'next/headers';
+import { generateText, type UIMessage } from "ai";
+import { cookies } from "next/headers";
 import {
   deleteMessagesByChatIdAfterTimestamp,
   getMessageById,
   updateChatVisiblityById,
-} from '@/lib/db/queries';
-import type { VisibilityType } from '@/components/visibility-selector';
-import { getModel } from '@/lib/byorouter/model';
-import type { Session } from 'next-auth';
+} from "@/lib/db/queries";
+import type { VisibilityType } from "@/components/visibility-selector";
+import { getModel } from "@/lib/byorouter/model";
+import type { Session } from "next-auth";
 
 export async function saveChatModelAsCookie(model: string) {
   const cookieStore = await cookies();
-  cookieStore.set('chat-model', model);
+  cookieStore.set("chat-model", model);
 }
 
 export async function saveProviderAsCookie(provider: string) {
   const cookieStore = await cookies();
-  cookieStore.set('chat-provider', provider);
+  cookieStore.set("chat-provider", provider);
 }
 
 export async function generateTitleFromUserMessage({

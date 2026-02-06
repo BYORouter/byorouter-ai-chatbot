@@ -1,5 +1,5 @@
-import { LoaderIcon } from './icons';
-import cn from 'classnames';
+import { LoaderIcon } from "./icons";
+import cn from "classnames";
 
 interface ImageEditorProps {
   title: string;
@@ -18,12 +18,12 @@ export function ImageEditor({
 }: ImageEditorProps) {
   return (
     <div
-      className={cn('flex flex-row items-center justify-center w-full', {
-        'h-[calc(100dvh-60px)]': !isInline,
-        'h-[200px]': isInline,
+      className={cn("flex flex-row items-center justify-center w-full", {
+        "h-[calc(100dvh-60px)]": !isInline,
+        "h-[200px]": isInline,
       })}
     >
-      {status === 'streaming' ? (
+      {status === "streaming" ? (
         <div className="flex flex-row gap-4 items-center">
           {!isInline && (
             <div className="animate-spin">
@@ -35,8 +35,8 @@ export function ImageEditor({
       ) : (
         <picture>
           <img
-            className={cn('w-full h-fit max-w-[800px]', {
-              'p-0 md:p-20': !isInline,
+            className={cn("w-full h-fit max-w-[800px]", {
+              "p-0 md:p-20": !isInline,
             })}
             src={`data:image/png;base64,${content}`}
             alt={title}

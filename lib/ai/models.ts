@@ -1,8 +1,8 @@
 // Default provider when user first connects
-export const DEFAULT_CHAT_PROVIDER: string = 'openai';
+export const DEFAULT_CHAT_PROVIDER: string = "openai";
 
 // Default model (in provider/model format)
-export const DEFAULT_CHAT_MODEL: string = 'openai/gpt-4o';
+export const DEFAULT_CHAT_MODEL: string = "openai/gpt-4o";
 
 export interface ChatModel {
   id: string;

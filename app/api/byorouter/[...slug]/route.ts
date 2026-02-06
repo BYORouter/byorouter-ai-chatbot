@@ -1,9 +1,6 @@
-import { createHandlers } from '@byorouter/next';
-import { auth } from '@/app/(auth)/auth';
-import {
-  getUserConnectionId,
-  updateUserConnectionId,
-} from '@/lib/db/queries';
+import { createHandlers } from "@byorouter/next";
+import { auth } from "@/app/(auth)/auth";
+import { getUserConnectionId, updateUserConnectionId } from "@/lib/db/queries";
 
 export const { GET, POST } = createHandlers({
   clientId: process.env.BYOROUTER_CLIENT_ID!,

@@ -1,19 +1,19 @@
-'use client';
+"use client";
 
-import { startTransition, useOptimistic, useState } from 'react';
-import { useModels, useConnect } from '@byorouter/react';
+import { startTransition, useOptimistic, useState } from "react";
+import { useModels, useConnect } from "@byorouter/react";
 
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { cn } from '@/lib/utils';
-import { CheckCircleFillIcon, ChevronDownIcon, PlusIcon } from './icons';
-import { saveProviderAsCookie } from '@/app/(chat)/actions';
+} from "@/components/ui/dropdown-menu";
+import { cn } from "@/lib/utils";
+import { CheckCircleFillIcon, ChevronDownIcon, PlusIcon } from "./icons";
+import { saveProviderAsCookie } from "@/app/(chat)/actions";
 
 export function ProviderSelector({
   selectedProviderId,
@@ -34,14 +34,15 @@ export function ProviderSelector({
   const { connectUrl } = useConnect();
 
   const selectedProvider = providers.find((p) => p.id === optimisticProviderId);
-  const selectedProviderName = selectedProvider?.displayName ?? initialDisplayName ?? optimisticProviderId;
+  const selectedProviderName =
+    selectedProvider?.displayName ?? initialDisplayName ?? optimisticProviderId;
 
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger
         asChild
         className={cn(
-          'w-fit data-[state=open]:bg-accent data-[state=open]:text-accent-foreground',
+          "w-fit data-[state=open]:bg-accent data-[state=open]:text-accent-foreground",
           className,
         )}
       >
@@ -86,10 +87,7 @@ export function ProviderSelector({
         {providers.length > 0 && <DropdownMenuSeparator />}
 
         <DropdownMenuItem asChild>
-          <a
-            href={connectUrl}
-            className="flex flex-row items-center gap-2"
-          >
+          <a href={connectUrl} className="flex flex-row items-center gap-2">
             <PlusIcon />
             Connect AI Provider
           </a>
