@@ -1,10 +1,13 @@
-import { compare } from "bcrypt-ts";
+import { compare, genSaltSync, hashSync } from "bcrypt-ts";
+import { generateId } from "ai";
 import NextAuth, { type DefaultSession } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { createGuestUser, getUser } from "@/lib/db/queries";
 import { authConfig } from "./auth.config";
-import { DUMMY_PASSWORD } from "@/lib/constants";
 import type { DefaultJWT } from "next-auth/jwt";
+
+// Generate dummy password here to avoid pulling bcrypt into Edge middleware via constants.ts
+const DUMMY_PASSWORD = hashSync(generateId(12), genSaltSync(10));
 
 export type UserType = "guest" | "regular";
 
