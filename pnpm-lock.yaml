@@ -15,20 +15,20 @@ importers:
         specifier: ^1.2.15
         version: 1.2.15(zod@3.24.2)
       '@byorouter/ai-sdk':
-        specifier: file:../byorouter/packages/ai-sdk
-        version: file:../byorouter/packages/ai-sdk(ai@4.3.13(react@19.0.0-rc-45804af1-20241021)(zod@3.24.2))(zod@3.24.2)
+        specifier: ^0.1.0
+        version: 0.1.0(ai@4.3.13(react@19.0.0-rc-45804af1-20241021)(zod@3.24.2))(zod@3.24.2)
       '@byorouter/js':
-        specifier: file:../byorouter/packages/js
-        version: file:../byorouter/packages/js
+        specifier: ^0.1.0
+        version: 0.1.0
       '@byorouter/next':
-        specifier: file:../byorouter/packages/next
-        version: file:../byorouter/packages/next(@byorouter/js@file:../byorouter/packages/js)(@byorouter/node@file:../byorouter/packages/node)(next@15.3.0-canary.31(@opentelemetry/api@1.9.0)(@playwright/test@1.51.0)(react-dom@19.0.0-rc-45804af1-20241021(react@19.0.0-rc-45804af1-20241021))(react@19.0.0-rc-45804af1-20241021))
+        specifier: ^0.1.0
+        version: 0.1.0(@byorouter/js@0.1.0)(@byorouter/node@0.1.0)(next@15.3.0-canary.31(@opentelemetry/api@1.9.0)(@playwright/test@1.51.0)(react-dom@19.0.0-rc-45804af1-20241021(react@19.0.0-rc-45804af1-20241021))(react@19.0.0-rc-45804af1-20241021))
       '@byorouter/node':
-        specifier: file:../byorouter/packages/node
-        version: file:../byorouter/packages/node
+        specifier: ^0.1.0
+        version: 0.1.0
       '@byorouter/react':
-        specifier: file:../byorouter/packages/react
-        version: file:../byorouter/packages/react(react@19.0.0-rc-45804af1-20241021)(swr@2.3.3(react@19.0.0-rc-45804af1-20241021))
+        specifier: ^0.1.0
+        version: 0.1.0(react@19.0.0-rc-45804af1-20241021)(swr@2.3.3(react@19.0.0-rc-45804af1-20241021))
       '@codemirror/lang-javascript':
         specifier: ^6.2.2
         version: 6.2.3
@@ -416,26 +416,26 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@byorouter/ai-sdk@file:../byorouter/packages/ai-sdk':
-    resolution: {directory: ../byorouter/packages/ai-sdk, type: directory}
+  '@byorouter/ai-sdk@0.1.0':
+    resolution: {integrity: sha512-ffhvnGoWfp5xeIk9dTRsx345yIaCJKvfXUxxw9n6y9dz0boCR+8QUOCB4WKmxOQmTYjbst8VpdsRnB/zCtexpA==}
     peerDependencies:
       ai: '>=3.0.0'
 
-  '@byorouter/js@file:../byorouter/packages/js':
-    resolution: {directory: ../byorouter/packages/js, type: directory}
+  '@byorouter/js@0.1.0':
+    resolution: {integrity: sha512-suLzTKRGrWcYjHrjHALZ2neSToJnV/3E0UYFMFj3EQOrETcPKsJe+KQQ1SkOWjGimIc6C9t2Djxmif9wq4N7Gw==}
 
-  '@byorouter/next@file:../byorouter/packages/next':
-    resolution: {directory: ../byorouter/packages/next, type: directory}
+  '@byorouter/next@0.1.0':
+    resolution: {integrity: sha512-VqIXV+FfjEVDNhjRJqudg88IoV9f9K6iIEYZqQV4obQ/plT6R5tOe+w+dVMaUVobbrHUSKoggpfKR7M85a4cVw==}
     peerDependencies:
       '@byorouter/js': '>=0.1.0'
       '@byorouter/node': '>=0.1.0'
       next: '>=14.0.0'
 
-  '@byorouter/node@file:../byorouter/packages/node':
-    resolution: {directory: ../byorouter/packages/node, type: directory}
+  '@byorouter/node@0.1.0':
+    resolution: {integrity: sha512-rpte0TBs+BObaIARbTiK4qlh0aoLXD47xp/OTMY7jpP1/tF/jeUgUmIpgsnplStzFTObSNljqOO8uQsiwOdpmw==}
 
-  '@byorouter/react@file:../byorouter/packages/react':
-    resolution: {directory: ../byorouter/packages/react, type: directory}
+  '@byorouter/react@0.1.0':
+    resolution: {integrity: sha512-kpmhjxl9kjijiSXNCekb3k+7crkf5k3a2ZAHCAgrnnJIOKAFbXhRsMWNSR2/8mofEMjqe7oj5vsfhjA19lXqMQ==}
     peerDependencies:
       react: '>=18.0.0'
       swr: '>=2.0.0'
@@ -4137,24 +4137,24 @@ snapshots:
   '@biomejs/cli-win32-x64@1.9.4':
     optional: true
 
-  '@byorouter/ai-sdk@file:../byorouter/packages/ai-sdk(ai@4.3.13(react@19.0.0-rc-45804af1-20241021)(zod@3.24.2))(zod@3.24.2)':
+  '@byorouter/ai-sdk@0.1.0(ai@4.3.13(react@19.0.0-rc-45804af1-20241021)(zod@3.24.2))(zod@3.24.2)':
     dependencies:
       '@ai-sdk/openai-compatible': 0.1.17(zod@3.24.2)
       ai: 4.3.13(react@19.0.0-rc-45804af1-20241021)(zod@3.24.2)
     transitivePeerDependencies:
       - zod
 
-  '@byorouter/js@file:../byorouter/packages/js': {}
+  '@byorouter/js@0.1.0': {}
 
-  '@byorouter/next@file:../byorouter/packages/next(@byorouter/js@file:../byorouter/packages/js)(@byorouter/node@file:../byorouter/packages/node)(next@15.3.0-canary.31(@opentelemetry/api@1.9.0)(@playwright/test@1.51.0)(react-dom@19.0.0-rc-45804af1-20241021(react@19.0.0-rc-45804af1-20241021))(react@19.0.0-rc-45804af1-20241021))':
+  '@byorouter/next@0.1.0(@byorouter/js@0.1.0)(@byorouter/node@0.1.0)(next@15.3.0-canary.31(@opentelemetry/api@1.9.0)(@playwright/test@1.51.0)(react-dom@19.0.0-rc-45804af1-20241021(react@19.0.0-rc-45804af1-20241021))(react@19.0.0-rc-45804af1-20241021))':
     dependencies:
-      '@byorouter/js': file:../byorouter/packages/js
-      '@byorouter/node': file:../byorouter/packages/node
+      '@byorouter/js': 0.1.0
+      '@byorouter/node': 0.1.0
       next: 15.3.0-canary.31(@opentelemetry/api@1.9.0)(@playwright/test@1.51.0)(react-dom@19.0.0-rc-45804af1-20241021(react@19.0.0-rc-45804af1-20241021))(react@19.0.0-rc-45804af1-20241021)
 
-  '@byorouter/node@file:../byorouter/packages/node': {}
+  '@byorouter/node@0.1.0': {}
 
-  '@byorouter/react@file:../byorouter/packages/react(react@19.0.0-rc-45804af1-20241021)(swr@2.3.3(react@19.0.0-rc-45804af1-20241021))':
+  '@byorouter/react@0.1.0(react@19.0.0-rc-45804af1-20241021)(swr@2.3.3(react@19.0.0-rc-45804af1-20241021))':
     dependencies:
       react: 19.0.0-rc-45804af1-20241021
       swr: 2.3.3(react@19.0.0-rc-45804af1-20241021)
