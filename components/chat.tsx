@@ -25,18 +25,24 @@ export function Chat({
   id,
   initialMessages,
   initialChatModel,
+  initialChatProvider,
+  initialProviderDisplayName,
   initialVisibilityType,
   isReadonly,
   session,
   autoResume,
+  hasConnection,
 }: {
   id: string;
   initialMessages: Array<UIMessage>;
   initialChatModel: string;
+  initialChatProvider: string;
+  initialProviderDisplayName: string;
   initialVisibilityType: VisibilityType;
   isReadonly: boolean;
   session: Session;
   autoResume: boolean;
+  hasConnection: boolean;
 }) {
   const { mutate } = useSWRConfig();
 
@@ -122,9 +128,11 @@ export function Chat({
         <ChatHeader
           chatId={id}
           selectedModelId={initialChatModel}
+          selectedProviderId={initialChatProvider}
+          selectedProviderDisplayName={initialProviderDisplayName}
           selectedVisibilityType={initialVisibilityType}
           isReadonly={isReadonly}
-          session={session}
+          hasConnection={hasConnection}
         />
 
         <Messages

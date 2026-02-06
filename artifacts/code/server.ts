@@ -1,16 +1,18 @@
 import { z } from 'zod';
 import { streamObject } from 'ai';
-import { myProvider } from '@/lib/ai/providers';
 import { codePrompt, updateDocumentPrompt } from '@/lib/ai/prompts';
 import { createDocumentHandler } from '@/lib/artifacts/server';
+import { getModel } from '@/lib/byorouter/model';
 
 export const codeDocumentHandler = createDocumentHandler<'code'>({
   kind: 'code',
-  onCreateDocument: async ({ title, dataStream }) => {
+  onCreateDocument: async ({ title, dataStream, session, modelId }) => {
     let draftContent = '';
 
+    const model = await getModel(session, modelId);
+
     const { fullStream } = streamObject({
-      model: myProvider.languageModel('artifact-model'),
+      model,
       system: codePrompt,
       prompt: title,
       schema: z.object({
@@ -38,11 +40,13 @@ export const codeDocumentHandler = createDocumentHandler<'code'>({
 
     return draftContent;
   },
-  onUpdateDocument: async ({ document, description, dataStream }) => {
+  onUpdateDocument: async ({ document, description, dataStream, session, modelId }) => {
     let draftContent = '';
 
+    const model = await getModel(session, modelId);
+
     const { fullStream } = streamObject({
-      model: myProvider.languageModel('artifact-model'),
+      model,
       system: updateDocumentPrompt(document.content, 'code'),
       prompt: description,
       schema: z.object({

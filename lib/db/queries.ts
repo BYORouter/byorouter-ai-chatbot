@@ -536,3 +536,35 @@ export async function getStreamIdsByChatId({ chatId }: { chatId: string }) {
     );
   }
 }
+
+export async function getUserConnectionId(
+  userId: string,
+): Promise<string | null> {
+  try {
+    const [result] = await db
+      .select({ connectionId: user.connectionId })
+      .from(user)
+      .where(eq(user.id, userId))
+      .limit(1);
+    return result?.connectionId ?? null;
+  } catch (error) {
+    throw new ChatSDKError(
+      'bad_request:database',
+      'Failed to get user connection id',
+    );
+  }
+}
+
+export async function updateUserConnectionId(
+  userId: string,
+  connectionId: string | null,
+): Promise<void> {
+  try {
+    await db.update(user).set({ connectionId }).where(eq(user.id, userId));
+  } catch (error) {
+    throw new ChatSDKError(
+      'bad_request:database',
+      'Failed to update user connection id',
+    );
+  }
+}

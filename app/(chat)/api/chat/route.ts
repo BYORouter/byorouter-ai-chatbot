@@ -14,6 +14,7 @@ import {
   getMessageCountByUserId,
   getMessagesByChatId,
   getStreamIdsByChatId,
+  getUserConnectionId,
   saveChat,
   saveMessages,
 } from '@/lib/db/queries';
@@ -23,8 +24,8 @@ import { createDocument } from '@/lib/ai/tools/create-document';
 import { updateDocument } from '@/lib/ai/tools/update-document';
 import { requestSuggestions } from '@/lib/ai/tools/request-suggestions';
 import { getWeather } from '@/lib/ai/tools/get-weather';
-import { isProductionEnvironment } from '@/lib/constants';
-import { myProvider } from '@/lib/ai/providers';
+import { isProductionEnvironment, isTestEnvironment } from '@/lib/constants';
+import { getModel } from '@/lib/byorouter/model';
 import { entitlementsByUserType } from '@/lib/ai/entitlements';
 import { postRequestBodySchema, type PostRequestBody } from './schema';
 import { geolocation } from '@vercel/functions';
@@ -92,11 +93,20 @@ export async function POST(request: Request) {
       return new ChatSDKError('rate_limit:chat').toResponse();
     }
 
+    if (!isTestEnvironment) {
+      const connectionId = await getUserConnectionId(session.user.id);
+      if (!connectionId) {
+        return new Response('Connect an AI provider first.', { status: 403 });
+      }
+    }
+
     const chat = await getChatById({ id });
 
     if (!chat) {
       const title = await generateTitleFromUserMessage({
         message,
+        session,
+        modelId: selectedChatModel,
       });
 
       await saveChat({
@@ -145,31 +155,27 @@ export async function POST(request: Request) {
     await createStreamId({ streamId, chatId: id });
 
     const stream = createDataStream({
-      execute: (dataStream) => {
+      execute: async (dataStream) => {
+        const model = await getModel(session, selectedChatModel);
+
         const result = streamText({
-          model: myProvider.languageModel(selectedChatModel),
+          model,
           system: systemPrompt({ selectedChatModel, requestHints }),
           messages,
           maxSteps: 5,
-          experimental_activeTools:
-            selectedChatModel === 'chat-model-reasoning'
-              ? []
-              : [
-                  'getWeather',
-                  'createDocument',
-                  'updateDocument',
-                  'requestSuggestions',
-                ],
+          experimental_activeTools: [
+            'getWeather',
+            'createDocument',
+            'updateDocument',
+            'requestSuggestions',
+          ],
           experimental_transform: smoothStream({ chunking: 'word' }),
           experimental_generateMessageId: generateUUID,
           tools: {
             getWeather,
-            createDocument: createDocument({ session, dataStream }),
-            updateDocument: updateDocument({ session, dataStream }),
-            requestSuggestions: requestSuggestions({
-              session,
-              dataStream,
-            }),
+            createDocument: createDocument({ session, dataStream, modelId: selectedChatModel }),
+            updateDocument: updateDocument({ session, dataStream, modelId: selectedChatModel }),
+            requestSuggestions: requestSuggestions({ session, dataStream, modelId: selectedChatModel }),
           },
           onFinish: async ({ response }) => {
             if (session.user?.id) {
